@@ -138,7 +138,7 @@ public:
   void setCalladdr(const Address &ad) { calladdr = ad; }		///< Set the address of the call being overridden
   void addCommit(TripleSymbol *sym,int4 num,uintm mask,bool flow,ConstructState *point);	///< Add a formal SLEIGH context change command
   void clearCommits(void) { contextcommit.clear(); }			///< Clear all context commits
-  void applyCommits(void);						///< Apply any pending commits to the context cache
+  bool applyCommits(void);						///< Apply any pending commits to the context cache (\b true if there were any)
   const Address &getAddr(void) const { return addr; }			///< Get the starting address of the current instruction
   const Address &getNaddr(void) const { return naddr; }			///< Get the address of the next instruction
   const Address &getN2addr(void) const;					///< Get the address of the instruction after the next

@@ -208,10 +208,10 @@ void ParserContext::addCommit(TripleSymbol *sym,int4 num,uintm mask,bool flow,Co
   set.flow = flow;
 }
 
-void ParserContext::applyCommits(void)
+bool ParserContext::applyCommits(void)
 
 {
-  if (contextcommit.empty()) return;
+  if (contextcommit.empty()) return false;
   ParserWalker walker(this);
   walker.baseState();
 
@@ -252,6 +252,7 @@ void ParserContext::applyCommits(void)
 	contcache->setContext(commitaddr,nextaddr,(*iter).num,(*iter).mask,(*iter).value);
     }
   }
+  return true;
 }
 
 /// This can be called in the middle of a parse to accommodate larger constructor trees.
