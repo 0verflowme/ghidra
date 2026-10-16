@@ -82,6 +82,18 @@ struct ContextSet {
   bool flow;			///< Does the new context flow from its set point
 };
 
+/// \brief A global context value committed at an address other than the instruction's fall-through
+///
+/// It states how the target decodes (a \e blx's instruction set) and is kept out of the context database.
+struct ContextTarget {
+  Address addr;			///< Where the value takes effect
+  int4 num;			///< Number of context word affected
+  uintm mask;			///< Bits within word affected
+  uintm value;			///< New setting for bits
+  uintm held;			///< The bits the database holds at the address
+  bool flow;			///< Does the new context flow from its set point
+};
+
 class ParserWalker;		// Forward declaration
 class ParserWalkerChange;
 class Translate;
@@ -138,7 +150,7 @@ public:
   void setCalladdr(const Address &ad) { calladdr = ad; }		///< Set the address of the call being overridden
   void addCommit(TripleSymbol *sym,int4 num,uintm mask,bool flow,ConstructState *point);	///< Add a formal SLEIGH context change command
   void clearCommits(void) { contextcommit.clear(); }			///< Clear all context commits
-  void applyCommits(void);						///< Apply any pending commits to the context cache
+  bool applyCommits(vector<ContextTarget> &elsewhere);			///< Commit fall-through context changes (\b true if there were any)
   const Address &getAddr(void) const { return addr; }			///< Get the starting address of the current instruction
   const Address &getNaddr(void) const { return naddr; }			///< Get the address of the next instruction
   const Address &getN2addr(void) const;					///< Get the address of the instruction after the next
